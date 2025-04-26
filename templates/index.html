@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Note Summarizer</title>
+    <script src="/static/script.js" defer></script>
+</head>
+<body>
+    <h1>AI Note Summarizer</h1>
+    <textarea id="inputText" rows="10" cols="50" placeholder="Paste your text here..."></textarea><br>
+    <button onclick="summarizeText()">Summarize</button>
+    <h3>Summary:</h3>
+    <p id="output"></p>
+</body>
+<button onclick="loadHistory()">Show History</button>
+
+<div id="history"></div>
+
+<script>
+async function loadHistory() {
+    const response = await fetch("/logs");
+    const data = await response.json();
+    
+    const historyDiv = document.getElementById("history");
+    historyDiv.innerHTML = "";
+
+    data.logs.forEach(log => {
+        const entry = document.createElement("div");
+        entry.innerHTML = `
+            <p><strong>Prompt:</strong> ${log.prompt}</p>
+            <p><strong>Summary:</strong> ${log.summary}</p>
+            <p><em>${log.timestamp}</em></p>
+            <hr>
+        `;
+        historyDiv.appendChild(entry);
+    });
+}
+</script>
+
+</html>
